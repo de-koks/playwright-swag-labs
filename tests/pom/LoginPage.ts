@@ -14,7 +14,7 @@ export class LoginPage extends BasePage {
         super(page);
         this.usernameInput = this.page.locator('[data-test="username"]');
         this.passwordInput = this.page.locator('[data-test="password"]');
-        this.loginButton = this.page.locator('data-test="login-button"');
+        this.loginButton = this.page.locator('[data-test="login-button"]');
         this.errorMessage = this.page.locator('[data-test="error"]');
         this.notLoggedInErrorMessage = this.errorMessage.getByText(
             "Epic sadface: You can only access '/inventory.html' when you are logged in.",
