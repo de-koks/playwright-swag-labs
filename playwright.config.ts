@@ -14,6 +14,14 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 export default defineConfig({
     testDir: './tests/specs',
     /* Run tests in files in parallel */
+    expect: {
+        // toHaveScreenshot: {
+        //   pathTemplate: '{testDir}/screenshots/{projectName}/{testFilePath}/{arg}{ext}',
+        // },
+        toMatchAriaSnapshot: {
+            pathTemplate: '{testDir}/snapshots/{projectName}/{testFilePath}/{arg}{ext}',
+        },
+    },
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
@@ -36,47 +44,36 @@ export default defineConfig({
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'Desktop Chrome',
+            name: 'Desktop Chrome non-auth',
             use: { ...devices['Desktop Chrome'] },
-            testMatch: '/*@(common|desktop).spec.ts',
+            testMatch: '/non-auth/*@(common|desktop).spec.ts',
         },
+        // {
+        //     name: 'Mobile Safari non-auth',
+        //     use: { ...devices['iPhone 15'] },
+        //     testMatch: '/non-auth/*@(common|mobile).spec.ts',
+        // },
         {
-            name: 'Mobile Safari',
-            use: { ...devices['iPhone 15'] },
-            testMatch: '/*@(common|mobile).spec.ts',
+            name: 'Desktop Chrome auth',
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: 'playwright/.auth/standard_user.json',
+            },
+            testMatch: '/auth/*@(common|desktop).spec.ts',
+            dependencies: ['auth'],
         },
-
         // {
-        //   name: 'firefox',
-        //   use: { ...devices['Desktop Firefox'] },
+        //     name: 'Mobile Safari auth',
+        //     use: {
+        //         ...devices['iPhone 15'],
+        //         storageState: 'playwright/.auth/standard_user.json',
+        //     },
+        //     testMatch: '/auth/*@(common|mobile).spec.ts',
+        //     dependencies: ['auth'],
         // },
-
-        // {
-        //   name: 'webkit',
-        //   use: { ...devices['Desktop Safari'] },
-        // },
-
-        /* Test against mobile viewports. */
-        // {
-        //   name: 'Mobile Chrome',
-        //   use: { ...devices['Pixel 5'] },
-        // },
-
-        /* Test against branded browsers. */
-        // {
-        //   name: 'Microsoft Edge',
-        //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-        // },
-        // {
-        //   name: 'Google Chrome',
-        //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-        // },
+        {
+            name: 'auth',
+            testMatch: 'tests/specs/auth@common.spec.ts',
+        },
     ],
-
-    /* Run your local dev server before starting the tests */
-    // webServer: {
-    //   command: 'npm run start',
-    //   url: 'http://localhost:3000',
-    //   reuseExistingServer: !process.env.CI,
-    // },
 });

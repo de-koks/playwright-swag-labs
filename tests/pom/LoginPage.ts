@@ -32,10 +32,18 @@ export class LoginPage extends BasePage {
         await this.page.goto('/');
     }
 
-    async inputStandardUserUsername() {
-        if (!process.env.STANDARD_USER) {
-            throw new Error('STANDARD_USER is not defined in the environment variables');
+    private async inputSecret(secret: string, input: Locator) {
+        if (!process.env[secret]) {
+            throw new Error(`${secret} is not defined in the environment variables`);
         }
-        await this.usernameInput.fill(process.env.STANDARD_USER);
+        await input.fill(process.env[secret]);
+    }
+
+    async inputStandardUserUsername() {
+        await this.inputSecret('STANDARD_USER', this.usernameInput);
+    }
+
+    async inputStandardUserPassword() {
+        await this.inputSecret('PASSWORD', this.passwordInput);
     }
 }

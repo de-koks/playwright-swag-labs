@@ -10,6 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             STANDARD_USER: ${{secrets.STANDARD_USER}}
+            PASSWORD: ${{secrets.PASSWORD}}
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
